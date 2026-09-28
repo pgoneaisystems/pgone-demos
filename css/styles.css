@@ -1,0 +1,94 @@
+/* Scrollbar oculta o estilizada al estilo WhatsApp */
+#chat-messages::-webkit-scrollbar {
+  width: 5px;
+}
+#chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+#chat-messages::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+
+/* Animación de entrada suave para mensajes */
+@keyframes messageIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.msg-bubble {
+  animation: messageIn 0.22s ease-out forwards;
+  max-width: 85%;
+  word-break: break-word;
+}
+
+/* Burbujas tipo WhatsApp Web / Android */
+.msg-in {
+  background-color: #202c33;
+  color: #e9edef;
+  align-self: flex-start;
+  border-top-left-radius: 2px;
+}
+
+.msg-out {
+  background-color: #005c4b;
+  color: #e9edef;
+  align-self: flex-end;
+  border-top-right-radius: 2px;
+}
+
+/* Botones Quick Reply */
+.quick-reply-btn {
+  background-color: #202c33;
+  border: 1px solid #00a884;
+  color: #00a884;
+  transition: all 0.2s ease;
+}
+.quick-reply-btn:hover {
+  background-color: #00a884;
+  color: #ffffff;
+}
+
+/* Animación de "Escribiendo..." */
+.dot-flashing {
+  position: relative;
+  width: 6px;
+  height: 6px;
+  border-radius: 5px;
+  background-color: #8696a0;
+  animation: dotFlashing 1s infinite linear alternate;
+}
+.dot-flashing::before, .dot-flashing::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 5px;
+  background-color: #8696a0;
+}
+.dot-flashing::before {
+  left: -9px;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 0s;
+}
+.dot-flashing {
+  animation-delay: 0.5s;
+}
+.dot-flashing::after {
+  left: 9px;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 1s;
+}
+
+@keyframes dotFlashing {
+  0% { opacity: 0.2; }
+  50%, 100% { opacity: 1; }
+}
