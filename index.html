@@ -10,28 +10,28 @@
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col items-center justify-start p-2 sm:p-6 font-sans">
 
-  <!-- Header Superior / Selector de Verticales -->
-  <header class="w-full max-w-4xl flex flex-col sm:flex-row items-center justify-between gap-4 py-4 px-6 bg-slate-800/80 backdrop-blur rounded-2xl border border-slate-700 shadow-xl mb-6">
+  <!-- Header Superior / Selector de Verticales (Ocultable vía ?vertical=) -->
+  <header id="main-header" class="w-full max-w-4xl flex flex-col sm:flex-row items-center justify-between gap-4 py-4 px-6 bg-slate-800/80 backdrop-blur rounded-2xl border border-slate-700 shadow-xl mb-6">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xl border border-emerald-500/30">
         <i class="fa-solid fa-cube"></i>
       </div>
       <div>
-        <h1 class="text-base font-bold text-white tracking-wide">PG-ONE Showroom</h1>
-        <p class="text-xs text-slate-400">Demos transaccionales interactivas</p>
+        <h1 id="brand-title" class="text-base font-bold text-white tracking-wide">PG-ONE Showroom</h1>
+        <p id="brand-subtitle" class="text-xs text-slate-400">Demos transaccionales interactivas</p>
       </div>
     </div>
 
     <!-- Selector de Verticales -->
-    <div class="flex items-center gap-1 sm:gap-2 bg-slate-900/90 p-1 rounded-xl border border-slate-700/80 text-xs font-semibold">
+    <div id="nav-tabs" class="flex items-center gap-1 sm:gap-2 bg-slate-900/90 p-1 rounded-xl border border-slate-700/80 text-xs font-semibold">
       <button id="btn-cotizaflow" class="nav-tab active px-3 py-2 rounded-lg transition-all text-white bg-emerald-600 flex items-center gap-2">
         <i class="fa-solid fa-car-side"></i> Traslados
       </button>
       <button id="btn-servicios" class="nav-tab px-3 py-2 rounded-lg transition-all text-slate-400 hover:text-white flex items-center gap-2">
-        <i class="fa-solid fa-wrench"></i> Servicios Hogar
+        <i class="fa-solid fa-screwdriver-wrench"></i> Servicios Hogar
       </button>
-      <button id="btn-retail" class="nav-tab px-3 py-2 rounded-lg transition-all text-slate-400 hover:text-white flex items-center gap-2">
-        <i class="fa-solid fa-ticket"></i> Retail Pass
+      <button id="btn-turnos" class="nav-tab px-3 py-2 rounded-lg transition-all text-slate-400 hover:text-white flex items-center gap-2">
+        <i class="fa-solid fa-calendar-check"></i> Turnos & Estética
       </button>
     </div>
 
@@ -62,7 +62,7 @@
         <!-- Header de WhatsApp -->
         <div class="bg-[#202c33] text-slate-200 px-4 pt-7 pb-3 flex items-center justify-between border-b border-neutral-800 select-none">
           <div class="flex items-center gap-3">
-            <button class="text-slate-400 hover:text-white"><i class="fa-solid fa-arrow-left"></i></button>
+            <button id="chat-back-btn" class="text-slate-400 hover:text-white"><i class="fa-solid fa-arrow-left"></i></button>
             <div id="bot-avatar" class="w-9 h-9 rounded-full bg-emerald-700 flex items-center justify-center text-white font-bold text-sm">
               CF
             </div>
@@ -79,7 +79,6 @@
 
         <!-- Chat Container (Mensajes y burbujas) -->
         <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 bg-[radial-gradient(#1f2c34_1px,transparent_1px)] [background-size:16px_16px]">
-          <!-- Los mensajes se renderizan dinámicamente con JS -->
         </div>
 
         <!-- Input Bar (Simulada) -->

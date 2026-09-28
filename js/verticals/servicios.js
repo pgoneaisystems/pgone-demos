@@ -2,100 +2,131 @@ export class ServiciosVertical {
   constructor(chatEngine, tourEngine) {
     this.chat = chatEngine;
     this.tour = tourEngine;
-    this.step = 'INIT';
+    this.step = 'MENU';
     this.collected = {
-      especialidad: '',
-      zona: '',
-      urgencia: ''
+      consulta: '',
+      nombre: '',
+      domicilio: '',
+      contacto: ''
     };
   }
 
   start() {
-    this.step = 'INIT';
+    this.step = 'MENU';
     this.chat.clear();
     this.chat.setHeader({
-      avatar: 'SH',
-      name: 'Servicios Express 24hs',
-      status: 'en línea (Guardia)'
+      avatar: 'EL',
+      name: 'Electricista López (Demo)',
+      status: 'en línea (24/7)'
     });
 
     this.tour.showStep({
-      tag: "Paso 1: Triaje Automático",
-      title: "Clasificación de Emergencias",
-      desc: "El bot clasifica el oficio y valida si se trata de una urgencia 24hs o un turno programado.",
-      metric: "Triaje automático en <5 segundos"
+      tag: "Paso 1: Bienvenida Comercial",
+      title: "Atención Inmediata para Profesionales",
+      desc: "El cliente es recibido por un asistente que filtra dudas de servicios o inicia directamente la toma del pedido sin esperas.",
+      metric: "Cero llamadas perdidas por estar trabajando"
     });
 
-    this.chat.botReply("¡Hola! Bienvenido al centro de atención técnica y emergencias del hogar. 🔧", 400, () => {
-      this.chat.botReply("¿Qué tipo de servicio técnico estás necesitando?", 500, () => {
-        this.chat.renderQuickReplies([
-          { label: "⚡ Electricidad", action: () => this.selectEspecialidad('Electricidad') },
-          { label: "💧 Plomería / Gas", action: () => this.selectEspecialidad('Plomería / Gas') },
-          { label: "🔑 Cerrajería 24hs", action: () => this.selectEspecialidad('Cerrajería') }
-        ]);
-      });
-    });
-  }
+    const bienvenida = "¡Hola! 👋 Soy el asistente virtual de Electricista López.\n\n¿En qué te puedo ayudar hoy?";
 
-  selectEspecialidad(esp) {
-    this.collected.especialidad = esp;
-    this.chat.userSend(esp);
-
-    this.tour.showStep({
-      tag: "Paso 2: Segmentación Geográfica",
-      title: "Validación de Cobertura",
-      desc: "Verifica que el pedido esté dentro del radio operativo de la guardia antes de comprometer recursos.",
-      metric: "0 visitas fuera de zona"
-    });
-
-    this.chat.botReply(`Excelente. Para enviarte un especialista en ${esp}, indicame tu zona de residencia:`, 500, () => {
+    this.chat.botReply(bienvenida, 400, () => {
       this.chat.renderQuickReplies([
-        { label: "CABA (Centro/Norte)", action: () => this.selectZona('CABA') },
-        { label: "GBA Sur", action: () => this.selectZona('GBA Sur') },
-        { label: "GBA Norte", action: () => this.selectZona('GBA Norte') }
+        { label: "📋 Servicios", action: () => this.showServicios() },
+        { label: "💰 Solicitar presupuesto", action: () => this.iniciarPresupuesto() }
       ]);
     });
   }
 
-  selectZona(zona) {
-    this.collected.zona = zona;
-    this.chat.userSend(zona);
+  showServicios() {
+    this.chat.userSend("📋 Servicios");
 
     this.tour.showStep({
-      tag: "Paso 3: Nivel de Prioridad",
-      title: "Despacho Inmediato vs Turno",
-      desc: "Calcula el valor base de la visita técnica según el nivel de urgencia del cliente.",
-      metric: "Tarifas de guardia transparentes"
+      tag: "Catálogo de Oficios",
+      title: "Detalle de Prestaciones",
+      desc: "Muestra claramente qué trabajos realiza el profesional, evitando consultas por rubros no atendidos.",
+      metric: "100% de consultas filtradas por especialidad"
     });
 
-    this.chat.botReply("¿Requerís una guardia de urgencia inmediata o coordinar un turno programado?", 500, () => {
+    const textoServicios = "Estos son los servicios que ofrecemos:\n\n🔧 *INSTALACIONES*\n➔ Tomacorrientes y llaves\n➔ Cableado nuevo\n➔ Tableros eléctricos\n\n💡 *ILUMINACIÓN*\n➔ Luminarias LED\n➔ Apliques y spots\n➔ Iluminación exterior\n\n🛠️ *REPARACIONES*\n➔ Cortocircuitos\n➔ Térmicas y disyuntores\n➔ Puesta a tierra\n\n🚨 *URGENCIAS 24/7*\nAtendemos emergencias todos los días.\n\n¿Cómo querés avanzar?";
+
+    this.chat.botReply(textoServicios, 500, () => {
       this.chat.renderQuickReplies([
-        { label: "🚨 Urgencia Inmediata (Hoy)", action: () => this.confirmarOrden('Urgencia 24hs', '$ 18.000') },
-        { label: "📅 Turno Programado", action: () => this.confirmarOrden('Programado', '$ 12.000') }
+        { label: "💰 Pedir presupuesto", action: () => this.iniciarPresupuesto() },
+        { label: "🔙 Volver al menú", action: () => this.start() }
       ]);
     });
   }
 
-  confirmarOrden(tipo, arancel) {
-    this.collected.urgencia = tipo;
-    this.chat.userSend(tipo);
+  iniciarPresupuesto() {
+    this.step = 'ASK_CONSULTA';
+    this.chat.userSend("💰 Solicitar presupuesto");
 
     this.tour.showStep({
-      tag: "Paso 4: Notificación a Guardia",
-      title: "Orden Despachada",
-      desc: "Se genera el número de solicitud y se alerta al técnico de guardia con los detalles exactos.",
-      metric: "Asignación de técnico inmediata"
+      tag: "Paso 2: Captura del Trabajo",
+      title: "Toma Precisa del Problema",
+      desc: "El asistente solicita al cliente que explique el problema con claridad para que el profesional calcule materiales y tiempo antes de ir.",
+      metric: "Información técnica completa antes de visitar"
     });
 
-    this.chat.botReply(
-      `✅ *Solicitud de Visita Técnica Registrada*\n\n📋 *Detalles del Servicio:*\n• Rubro: ${this.collected.especialidad}\n• Zona: ${this.collected.zona}\n• Modalidad: ${tipo}\n• Arancel base visita: ${arancel}\n\nUn técnico de guardia ha sido alertado para coordinar el arribo.`,
-      700
-    );
+    const promptConsulta = "💰 *Presupuesto sin cargo*\n\nContanos qué necesitás en un solo mensaje. Cuanto más detalle, más preciso será el presupuesto.\n\n📝 Escribí tu consulta a continuación: (escribí todo en una sola oración, separada por una coma. Ejemplo: \"Cambio de tomacorrientes, instalación de disyuntor\")";
+
+    this.chat.botReply(promptConsulta, 500);
   }
 
   handleInput(text) {
-    if (!text.trim()) return;
-    this.chat.userSend(text);
-    this.chat.botReply("Por favor seleccioná una de las opciones disponibles en pantalla para agilizar la asignación técnica.", 400);
+    const val = text.trim();
+    if (!val) return;
+
+    if (this.step === 'ASK_CONSULTA') {
+      this.collected.consulta = val;
+      this.step = 'ASK_NOMBRE';
+      this.chat.userSend(val);
+
+      this.tour.showStep({
+        tag: "Paso 3: Identificación del Cliente",
+        title: "Datos de Contacto Directo",
+        desc: "Se recaban los datos personales y de ubicación física del trabajo para coordinar la visita.",
+        metric: "Ficha ordenada y lista para agendar"
+      });
+
+      this.chat.botReply("Ahora necesitamos algunos datos para que el profesional te contacte.\n\n👉 ¿Cuál es tu nombre completo?", 500);
+      return;
+    }
+
+    if (this.step === 'ASK_NOMBRE') {
+      this.collected.nombre = val;
+      this.step = 'ASK_DOMICILIO';
+      this.chat.userSend(val);
+      this.chat.botReply("Perfecto. Ahora decime:\n\n📍 ¿Cuál es el domicilio donde realizaremos el trabajo?\n\nEjemplo: \"Av. Rivadavia 1234, CABA\"", 500);
+      return;
+    }
+
+    if (this.step === 'ASK_DOMICILIO') {
+      this.collected.domicilio = val;
+      this.step = 'ASK_CONTACTO';
+      this.chat.userSend(val);
+      this.chat.botReply("📱 ¿A qué número de WhatsApp podemos enviarte la cotización? (Ej: 11 2345-6789)", 500);
+      return;
+    }
+
+    if (this.step === 'ASK_CONTACTO') {
+      this.collected.contacto = val;
+      this.step = 'FINALIZADO';
+      this.chat.userSend(val);
+
+      this.tour.showStep({
+        tag: "Paso 4: Notificación y Cierre",
+        title: "Alerta Inmediata al Técnico",
+        desc: "Se pausa la atención automática y se despacha la orden completa al canal del profesional con botón directo para responder.",
+        metric: "Cierre de orden en segundos"
+      });
+
+      const confirmacion = `✅ ¡Solicitud recibida con éxito, ${this.collected.nombre}!\n\n📋 *Resumen de tu pedido:*\n• Consulta: ${this.collected.consulta}\n• Domicilio: ${this.collected.domicilio}\n• Contacto: ${this.collected.contacto}\n\nVamos a preparar tu presupuesto y te lo enviamos a la brevedad.\n\n¡Gracias por confiar en nosotros! ⚡`;
+
+      this.chat.botReply(confirmacion, 600, () => {
+        const whatsappLink = `https://wa.me/?text=${encodeURIComponent(`Hola ${this.collected.nombre}, me contacto de Electricista López respecto a tu presupuesto para: ${this.collected.consulta}`)}`;
+        this.chat.renderActionLink("Contactar al Cliente vía WhatsApp (Vista Técnico)", whatsappLink);
+      });
+    }
   }
 }
