@@ -136,10 +136,10 @@ document.addEventListener('DOMContentLoaded', () => {
       brandTitle.textContent = "CotizaFlow";
       brandSubtitle.textContent = "Demo Comercial Interactiva";
     } else if (paramVertical === 'servicios') {
-      brandTitle.textContent = "Servicios Hogar";
+      brandTitle.textContent = "Maestranza";
       brandSubtitle.textContent = "Demo de Atención y Presupuestos";
     } else if (paramVertical === 'turnos') {
-      brandTitle.textContent = "Turnos & Locales";
+      brandTitle.textContent = "Velvet Agenda";
       brandSubtitle.textContent = "Demo de Agendamiento Ágil";
     }
 
