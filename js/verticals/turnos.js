@@ -83,13 +83,13 @@ export class TurnosVertical {
     this.chat.userSend("📅 Consultar Turno");
 
     this.tour.showStep({
-      tag: "Paso 2: Captura de Preferencia",
-      title: "Preferencia de Servicio y Día",
-      desc: "El cliente indica qué se quiere hacer y qué franja le queda cómoda.",
+      tag: "Paso 2: Servicio y Franja",
+      title: "Servicio Deseado y Disponibilidad",
+      desc: "Primero se aísla el servicio y después la franja horaria, en dos pasos cortos y sin fricción.",
       metric: "Lead calificado sin fricción"
     });
 
-    this.chat.botReply("¡Genial! ¿Qué servicio te gustaría realizarte y qué día o franja horaria preferís? (Ej: Corte y barba, este viernes por la tarde)", 500);
+    this.chat.botReply("¡Genial! 🤩 ¿Qué servicio te gustaría realizarte? (Ej: Corte y barba)", 500);
   }
 
   handleInput(text) {
@@ -97,6 +97,14 @@ export class TurnosVertical {
     if (!val) return;
 
     if (this.step === 'ASK_SERVICIO') {
+      this.collected.servicio = val;
+      this.step = 'ASK_HORARIO';
+      this.chat.userSend(val);
+      this.chat.botReply("¿Qué día y en qué franja horaria preferís?", 500);
+      return;
+    }
+
+    if (this.step === 'ASK_HORARIO') {
       this.collected.preferencia = val;
       this.step = 'ASK_NOMBRE';
       this.chat.userSend(val);
@@ -108,7 +116,7 @@ export class TurnosVertical {
         metric: "Cero formularios engorrosos"
       });
 
-      this.chat.botReply("¿A nombre de quién agendamos la consulta? (Nombre y apellido)", 500);
+      this.chat.botReply("Decinos tu nombre", 500);
       return;
     }
 
@@ -116,7 +124,7 @@ export class TurnosVertical {
       this.collected.nombre = val;
       this.step = 'ASK_CONTACTO';
       this.chat.userSend(val);
-      this.chat.botReply("¿A qué número de WhatsApp te confirmamos el horario exacto disponible? (Ej: 11 5555-8888)", 500);
+      this.chat.botReply("Dejanos tu número de WhatsApp para poder confirmarte los horarios disponibles (ej: 1144556677)", 500);
       return;
     }
 
@@ -132,10 +140,10 @@ export class TurnosVertical {
         metric: "Confirmación en 5 segundos sin CRM complejo"
       });
 
-      const confirmacion = `✅ ¡Solicitud registrada, ${this.collected.nombre}!\n\n📋 *Detalle del pedido:*\n• Preferencia: ${this.collected.preferencia}\n• Contacto: ${this.collected.contacto}\n\nEn instantes revisamos la agenda y te confirmamos el horario disponible directamente por WhatsApp. ¡Gracias! ✨`;
+      const confirmacion = `✅ ¡Solicitud registrada, ${this.collected.nombre}!\n\n📋 *Detalle del pedido:*\n• Servicio: ${this.collected.servicio}\n• Preferencia: ${this.collected.preferencia}\n• Contacto: ${this.collected.contacto}\n\nEn instantes revisamos la agenda y te confirmamos el horario disponible directamente por WhatsApp. ¡Gracias! ✨`;
 
       this.chat.botReply(confirmacion, 600, () => {
-        const respuestaWhatsapp = `https://wa.me/?text=${encodeURIComponent(`Hola ${this.collected.nombre}, me contacto de Studio Urbano sobre tu consulta para: ${this.collected.preferencia}. ¿Te queda cómodo a las 16:30 hs?`)}`;
+        const respuestaWhatsapp = `https://wa.me/?text=${encodeURIComponent(`Hola ${this.collected.nombre}, me contacto de Studio Urbano sobre tu consulta para: ${this.collected.servicio} el ${this.collected.preferencia}. ¿Te queda cómodo a las 16:30 hs?`)}`;
         this.chat.renderActionLink("Responder al Cliente con Turno (Vista Local)", respuestaWhatsapp);
       });
     }
