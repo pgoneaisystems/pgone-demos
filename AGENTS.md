@@ -63,6 +63,7 @@ Convención: `this.step` en MAYÚSCULAS (`ASK_SERVICIO`, `ASK_HORARIO`…), mens
 ## Infra
 
 - **Vercel:** team `eric-pesci` · proyecto `pgone-demos` · rama de producción **`main`**
+- **Dominio oficial ≠ CLI (regla 2026-09-30):** el dominio oficial de un proyecto se toma del **dashboard de Vercel** (Settings → Domains). El CLI sólo para operaciones (deploy, env, logs): `vercel project ls` lista la URL efírmica por defecto, no el dominio oficial. Ej.: `quantumlabs-admin` → oficial `quantumlabs-admin.vercel.app`; el CLI muestra `quantumlabs-admin-eric-pesci.vercel.app`. No "corregir" documentación hacia el sufijo `-eric-pesci`.
 - **Git:** `https://github.com/pgoneaisystems/pgone-demos.git` (cuenta `pgoneaisystems`, **pública**)
 - Deploy automático conectado: **`git push` a `main` publica solo**. No hace falta `vercel --prod`.
 - Comandos útiles: `vercel whoami`, `vercel git connect <url>`, `vercel logs <url>`
